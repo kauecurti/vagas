@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+
+   {% load static %}
+    {% load bootstrap_pagination %}
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static '/vagas/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+
+
+
+
+<nav class="navbar shadow  navbar-expand-lg navbar-fixed-top navbar-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="">Vagas</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main class="container">
+<h2 class="py-3 text-dark">Busca de Vagas</h2>
+{% load myapp_extras %}
+
+
+
+    {{filter.form}}
+</div>
+	<div class="row">
+	<div class="col-lg-12">
+		<divi class="card shadow-05 mb-1">
+		<form method="get">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <input type="text" class="form-control"  placeholder="Nome da Vaga"{{ filter.form.title}}
+    </div>
+    <div class="form-group col-md-2">
+      <input type="text" class="form-control"  placeholder="Estado"{{ filter.form.state}}
+    </div>
+    <div class="form-group col-md-4">
+      <input type="text" class="form-control"  placeholder="Cidade"{{ filter.form.city}}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Buscar Vaga</button>
+</form><br>
+		</div>
+	</div>
+</div><br>
+
+    {% for vaga in paginas%}
+ <div class="card">
+  <h5 class="card-header">Vagas</h5>
+  <div class="card-body">
+    <h5 class="card-title">{{vaga.title}}</h5>
+    <p class="card-text">{{vaga.description}}</p>
+      {{vaga.state}}-{{vaga.city}}<br>
+        <i class="fas fa-briefcase"></i> {{vaga.quantity}} Vaga<br>
+      <br>
+    <a href="{{vaga.url}}" target="_blank" class="btn btn-primary">Candidatar-se</a>
+  </div>
+	 <div class="card-footer text-muted">
+    Data de Publicaçao {{vaga.register_date}}
+  </div>
+</div><br>
+{% endfor %}
+
+{% if paginas.paginator.num_pages > 1 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if paginas.paginator.num_pages != 1 %}
+            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">First</a></li>
+        {% endif %}
+        {% if paginas.has_previous %}
+            <li class="page-item"><a class="page-link" href="{% my_url paginas.previous_page_number 'page' request.GET.urlencode %}">Pag Anterior</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Pag Anterior</a></li>
+        {% endif %}
+        {% for i in paginas.paginator.page_range %}
+            {% if paginas.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+            {% elif paginas.number > i|add:"-5" and paginas.number < i|add:"+5"%}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if paginas.has_next %}
+            <li class="page-item"><a class="page-link" href="{% my_url paginas.next_page_number 'page' request.GET.urlencode %}">Proxima Pag</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Proxima Pag</a></li>
+        {% endif %}
+        {% if paginas.paginator.num_pages != paginas.number %}
+            <li class="page-item"><a class="page-link" href="?page={{ paginas.paginator.num_pages }}">Last</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
+        {% endif %}
+    </ul>
+</nav>
+    {% endif %}
+
+
+
+
+
+
+</main>
+
+
+</body>
+
+</html>
